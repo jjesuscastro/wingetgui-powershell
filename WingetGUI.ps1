@@ -1,4 +1,4 @@
-Write-Host "WinGet Application Installer v072125"
+Write-Host "WinGet Application Installer v011526"
 
 Start-Process "winget" -ArgumentList "search 7zip --accept-source-agreements" -WindowStyle Hidden -Wait
 
