@@ -11,6 +11,7 @@ $appsByCategory = [ordered]@{
     } 
     "Utilities"    = [ordered]@{ 
         "AnyBurn"     = "PowerSoftware.AnyBurn"
+        "Bitwarden"  = "Bitwarden.Bitwarden"
         "7-Zip"       = "7zip.7zip" 
         "PowerToys"   = "Microsoft.PowerToys" 
         "qBittorrent" = "qBittorrent.qBittorrent"
@@ -26,6 +27,7 @@ $appsByCategory = [ordered]@{
         "JetBrains Rider"    = "JetBrains.Rider"
         "Unity Hub"          = "Unity.UnityHub" 
         "Visual Studio Code" = "Microsoft.VisualStudioCode"
+        "Visual Studio Community" = "Microsoft.VisualStudio.Community"
     }
     "Media"        = [ordered]@{ 
         "Handbrake"        = "Handbrake.Handbrake"
@@ -51,6 +53,7 @@ $appsByCategory = [ordered]@{
     "Other"        = [ordered]@{ 
         "Rainmeter" = "Rainmeter.Rainmeter"
         "VIA"       = "Olivia.VIA" 
+        "Vial"      = "Vial.Vial"
         "WindHawk"  = "RamenSoftware.Windhawk"
     }
 }
