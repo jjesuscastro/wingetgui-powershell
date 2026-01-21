@@ -1,4 +1,4 @@
-Write-Host "WinGet Application Installer v011526"
+Write-Host "WinGet Application Installer v012226"
 
 Start-Process "winget" -ArgumentList "search 7zip --accept-source-agreements" -WindowStyle Hidden -Wait
 
@@ -8,6 +8,7 @@ $appsByCategory = [ordered]@{
         "Google Chrome"   = "Google.Chrome"
         "Mozilla Firefox" = "Mozilla.Firefox"
         "Opera GX"        = "Opera.OperaGX"
+        "Helium"          = "ImputNet.Helium"
     } 
     "Utilities"    = [ordered]@{ 
         "AnyBurn"     = "PowerSoftware.AnyBurn"
@@ -15,13 +16,13 @@ $appsByCategory = [ordered]@{
         "7-Zip"       = "7zip.7zip" 
         "PowerToys"   = "Microsoft.PowerToys" 
         "qBittorrent" = "qBittorrent.qBittorrent"
+        "Google Drive"= "Google.GoogleDrive"
     } 
     "Messaging"    = [ordered]@{
         "Discord"     = "Discord.Discord" 
         "Discord PTB" = "Discord.Discord.PTB"
     }
     "Development"  = [ordered]@{ 
-        "Fork (Git Client)"  = "Fork.Fork"
         "Git"                = "Git.Git" 
         "GitHub Desktop"     = "GitHub.GitHubDesktop"
         "JetBrains Rider"    = "JetBrains.Rider"
@@ -65,6 +66,7 @@ function New-MainForm {
     $form = New-Object System.Windows.Forms.Form
     $form.Text = "WinGet Application Installer"
     $form.Size = New-Object System.Drawing.Size(400, 500)
+    $form.BackColor = [System.Drawing.Color]::FromArgb(30, 30, 30) # Dark Charcoal
     $form.StartPosition = "CenterScreen"
     $form.FormBorderStyle = "FixedDialog"  # Prevent resizing
     return $form
@@ -76,6 +78,11 @@ function New-TreeView {
     $treeView.Size = New-Object System.Drawing.Size(350, 300)
     $treeView.Location = New-Object System.Drawing.Point(20, 20)
     $treeView.CheckBoxes = $true  # Allows selection of applications
+
+    # Color properties
+    $treeView.BackColor = [System.Drawing.Color]::FromArgb(45, 45, 48)
+    $treeView.ForeColor = [System.Drawing.Color]::White
+    $treeView.LineColor = [System.Drawing.Color]::White
     return $treeView
 }
 
@@ -116,7 +123,7 @@ function Update-TreeView {
         $treeView.Nodes.Add($categoryNode) > $null
     }
 
-    Write-Host "Added $total applications."
+    # Write-Host "Added $total applications."
 }
 
 # Function to handle checking/unchecking of parent and child nodes
@@ -151,6 +158,7 @@ function Set-TreeViewEvents {
 # Function to New the installation status label
 function New-StatusLabel {
     $statusLabel = New-Object System.Windows.Forms.Label
+    $statusLabel.ForeColor = [System.Drawing.Color]::White # White text
     $statusLabel.Size = New-Object System.Drawing.Size(350, 20)
     $statusLabel.Location = New-Object System.Drawing.Point(20, 330)
     $statusLabel.Text = "Select apps to Install. Greyed out apps are already installed."
@@ -164,7 +172,9 @@ function New-InstallButton {
     $installButton.Text = "Install Selected"
     $installButton.Size = New-Object System.Drawing.Size(170, 30)
     $installButton.Location = New-Object System.Drawing.Point(200, 360)
-    $installButton.BackColor = [System.Drawing.Color]::LightBlue  # Add a tint to the button
+    $installButton.BackColor = [System.Drawing.Color]::SteelBlue
+    $installButton.ForeColor = [System.Drawing.Color]::Black
+    $installButton.FlatStyle = "Flat"
     
     $installButton.Add_Click({
             $selectedApps = @()
@@ -217,6 +227,9 @@ function New-TitusButton {
     $button.Text = $text
     $button.Size = New-Object System.Drawing.Size(170, 30)
     $button.Location = New-Object System.Drawing.Point($xPos, 400)
+    $button.BackColor = [System.Drawing.Color]::LightGray
+    $button.ForeColor = [System.Drawing.Color]::Black
+    $button.FlatStyle = "Flat"
 
     # Properly define the click event to use the captured variable
     $button.Add_Click([System.EventHandler] {
@@ -233,6 +246,9 @@ function New-ActivateButton {
     $button.Text = $text
     $button.Size = New-Object System.Drawing.Size(170, 30)
     $button.Location = New-Object System.Drawing.Point($xPos, 400)
+    $button.BackColor = [System.Drawing.Color]::LightGray
+    $button.ForeColor = [System.Drawing.Color]::Black
+    $button.FlatStyle = "Flat"
 
     # Properly define the click event to use the captured variable
     $button.Add_Click([System.EventHandler] {
@@ -249,6 +265,9 @@ function New-RefreshButton {
     $refreshButton.Text = "Refresh"
     $refreshButton.Size = New-Object System.Drawing.Size(170, 30)
     $refreshButton.Location = New-Object System.Drawing.Point(20, 360)
+    $refreshButton.BackColor = [System.Drawing.Color]::LightGray
+    $refreshButton.ForeColor = [System.Drawing.Color]::Black
+    $refreshButton.FlatStyle = "Flat"
     
     $refreshButton.Add_Click({
             # Recheck the list of installed applications
