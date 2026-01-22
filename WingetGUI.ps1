@@ -59,6 +59,32 @@ $appsByCategory = [ordered]@{
     }
 }
 
+# List of apps I install by default
+$defaultIds = @(
+    "Mozilla.Firefox",
+    "ImputNet.Helium",
+    "PowerSoftware.AnyBurn",
+    "7zip.7zip",
+    "Microsoft.PowerToys",
+    "qBittorrent.qBittorrent",
+    "Google.GoogleDrive",
+    "Discord.Discord",
+    "Git.Git",
+    "Unity.UnityHub",
+    "Microsoft.VisualStudioCode",
+    "Microsoft.VisualStudio.Community",
+    "Handbrake.Handbrake",
+    "VideoLAN.VLC",
+    "EpicGames.EpicGamesLauncher",
+    "Valve.Steam",
+    "RiotGames.Valorant.AP",
+    "Notion.Notion",
+    "Malwarebytes.Malwarebytes",
+    "Olivia.VIA",
+    "Vial.Vial",
+    "RamenSoftware.Windhawk"
+)
+
 Add-Type -AssemblyName System.Windows.Forms
 
 # Function to New the main form
@@ -76,7 +102,7 @@ function New-MainForm {
 function New-TreeView {
     $treeView = New-Object System.Windows.Forms.TreeView
     $treeView.Size = New-Object System.Drawing.Size(350, 300)
-    $treeView.Location = New-Object System.Drawing.Point(20, 20)
+    $treeView.Location = New-Object System.Drawing.Point(20, 50)
     $treeView.CheckBoxes = $true  # Allows selection of applications
 
     # Color properties
@@ -106,8 +132,10 @@ function Update-TreeView {
     foreach ($category in $appsByCategory.Keys) {
         $categoryNode = New-Object System.Windows.Forms.TreeNode($category)
         foreach ($appName in $appsByCategory[$category].Keys) {
-            $appNode = New-Object System.Windows.Forms.TreeNode($appName)
-            $appNode.Tag = $appsByCategory[$category][$appName]  # Store winget ID for installation
+            $appId = $appsByCategory[$category][$appName]
+            $displayText = "$appName ($appId)"
+            $appNode = New-Object System.Windows.Forms.TreeNode($displayText)
+            $appNode.Tag =  $appId # Store winget ID for installation
             
             # Check if the application is installed and disable the checkbox if it is
             if (Is-AppInstalled -appId $appNode.Tag) {
@@ -219,6 +247,40 @@ function New-InstallButton {
     return $installButton
 }
 
+function New-DefaultButton {
+    param($treeView) # Pass the treeView as a parameter
+    
+    $button = New-Object System.Windows.Forms.Button
+    $button.Text = "Select Default Apps"
+    $button.Size = New-Object System.Drawing.Size(170, 30)
+    $button.Location = New-Object System.Drawing.Point(20, 10)
+    $button.BackColor = [System.Drawing.Color]::LightGray
+    $button.ForeColor = [System.Drawing.Color]::Black
+    $button.FlatStyle = "Flat"
+
+    $button.Add_Click({
+        foreach ($categoryNode in $treeView.Nodes) {
+            foreach ($appNode in $categoryNode.Nodes) {
+                # Check if this app's ID is in our default list
+                if ($defaultIds -contains $appNode.Tag) {
+                    # Only check it if it's not already installed (to respect your grey-out logic)
+                    if (-not (Is-AppInstalled -appId $appNode.Tag)) {
+                        $appNode.Checked = $true
+                    } else {
+                        Write-Host "$appNode.Tag is already installed."
+                    }
+                }
+                else {
+                    # Optional: Uncheck apps NOT in the default list
+                    $appNode.Checked = $false
+                }
+            }
+        }
+    })
+
+    return $button
+}
+
 # Function to New additional buttons
 function New-TitusButton {
     param($text, $xPos)
@@ -287,6 +349,7 @@ $form = New-MainForm
 $treeView = New-TreeView
 $statusLabel = New-StatusLabel
 $installButton = New-InstallButton -treeView $treeView -statusLabel $statusLabel
+$defaultButton = New-DefaultButton -treeView $treeView -appsByCategory $appsByCategory
 $refreshButton = New-RefreshButton -treeView $treeView -appsByCategory $appsByCategory
 $chrisTitusButton = New-TitusButton -text "Chris Titus Script" -xPos 20
 $activateButton = New-ActivateButton -text "Activate Windows" -xPos 200
@@ -302,6 +365,7 @@ Set-TreeViewEvents -treeView $treeView
 $form.Controls.Add($treeView)
 $form.Controls.Add($statusLabel)
 $form.Controls.Add($installButton)
+$form.Controls.Add($defaultButton)
 $form.Controls.Add($refreshButton)
 $form.Controls.Add($chrisTitusButton)
 $form.Controls.Add($activateButton)
