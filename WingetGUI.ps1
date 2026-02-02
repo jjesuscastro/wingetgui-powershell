@@ -228,7 +228,7 @@ function New-InstallButton {
                 $statusLabel.Text = "Installing ($index of $total): $app"
 
                 # Start the installation process
-                $process = Start-Process "winget" -ArgumentList "install --id=$app --accept-package-agreements --accept-source-agreements" -NoNewWindow -PassThru
+                $process = Start-Process "winget" -ArgumentList "install --id=$app --accept-package-agreements --accept-source-agreements --source winget" -NoNewWindow -PassThru
 
                 # Show a rotating throbber while the process is running
                 $throbber = @("", ".", "..", "...")
