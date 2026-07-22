@@ -1,4 +1,4 @@
-Write-Host "WinGet Application Installer v012226"
+Write-Host "WinGet Application Installer v230726"
 
 Start-Process "winget" -ArgumentList "search 7zip --accept-source-agreements" -WindowStyle Hidden -Wait
 
@@ -23,9 +23,11 @@ $appsByCategory = [ordered]@{
         "Discord PTB" = "Discord.Discord.PTB"
     }
     "Development"  = [ordered]@{ 
+        "Android Studio"     = "Google.AndroidStudio"
         "Git"                = "Git.Git" 
         "GitHub Desktop"     = "GitHub.GitHubDesktop"
         "JetBrains Rider"    = "JetBrains.Rider"
+        "NodeJS"             = "OpenJS.NodeJS "
         "Unity Hub"          = "Unity.UnityHub" 
         "Visual Studio Code" = "Microsoft.VisualStudioCode"
         "Visual Studio Community" = "Microsoft.VisualStudio.Community"
